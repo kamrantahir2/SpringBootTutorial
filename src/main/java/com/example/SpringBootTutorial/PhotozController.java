@@ -60,17 +60,14 @@ public class PhotozController {
     public void delete(@PathVariable String id) {
         Photo photo = db.remove(id);
         if (photo == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // TO USE THIS DELETE FUNCTION WE NEED TO GO TO CONSOLE IN CHROME AND COPY AND PASTE THE FOLLOWING -
-//        (async function deletePhoto(id) {
-//                await fetch("http://localhost:8080/photoz/" + id, {
-//                method: "DELETE"
-//          })
-//})("5")
+        // USE [REF1] IN THE CHROME CONSOLE WHEN CALLING THIS METHOD
     }
 
     // PostMapping() used to upload photos
+    // [REF2] USED HERE
     @PostMapping("/photoz/")
-    public void create(Photo photo) {
+    // The @RequestBody annotation tells the web server to convert the entire JSON to a Photo object
+    public void create(@RequestBody Photo photo) {
         // For this method we want the front end to send some JSON and Spring should convert it to a photo object
         // WE NEED TO SET THE ID SINCE THE FRONT END WON'T DO THAT
         // The below code generates a random ID as a String .
