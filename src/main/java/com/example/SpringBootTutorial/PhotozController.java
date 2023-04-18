@@ -73,7 +73,7 @@ public class PhotozController {
     public void create(Photo photo) {
         // For this method we want the front end to send some JSON and Spring should convert it to a photo object
         // WE NEED TO SET THE ID SINCE THE FRONT END WON'T DO THAT
-        // The below code generates a random ID as a String
+        // The below code generates a random ID as a String .
         photo.setId(UUID.randomUUID().toString());
         db.put(photo.getId(), photo);
     }
