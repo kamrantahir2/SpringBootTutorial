@@ -10,6 +10,10 @@ public class Photo {
     @NotEmpty
     private String filename;
 
+    // Used to set headers in DownloadController
+
+    private String contentType;
+
     // When we get the JSON on the web server it includes the metadata (bytes[] array) which is huge and clogs up the screen. To avoid this we simply add the annotation @JsonIgnore
     @JsonIgnore
     private byte[] data;
@@ -46,5 +50,13 @@ public class Photo {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }

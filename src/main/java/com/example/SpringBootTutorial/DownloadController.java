@@ -1,11 +1,10 @@
 package com.example.SpringBootTutorial;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class DownloadController {
@@ -24,11 +23,31 @@ public class DownloadController {
     @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> download(@PathVariable String id) {
 
-        // THIS FIELD IS INCORRECT, this field should be uninitialized. It has been initialized as a stopping point
-        byte[] data = new byte[1];
+        // We search for the photo using photozService.get(id) and check to see if it is null, if so (meaning the photo doesn't exist) then we throw an error
+        Photo photo = photozService.get(id);
+        if (photo == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
+        // Now that we have searched for the photo and ensured that it exists we can call photo.getData()
+        byte[] data = photo.getData();
 
         // HttpHeaders is part of Spring Boot
         HttpHeaders headers = new HttpHeaders();
+
+        // We now have the data to send and we have our HttpStatus, the final step to handling actual images instead of raw data is setting headers
+
+        // First we need to define our content type, to do this we first went to the Photo class and added a String field called contentType
+
+        // After creating the field we can now do MediaType.valueOf(photo.getContentType())
+        headers.setContentType(MediaType.valueOf(photo.getContentType()));
+
+        // The browser also needs a file name and we need to decide whether the browser should display the image or download it:
+        // attachment downloads it and inline displays it
+
+        ContentDisposition build = ContentDisposition
+                .builder("attachment")
+                .filename(photo.getFilename())
+                .build();
+        headers.setContentDisposition(build);
 
         return new ResponseEntity<>(data, headers, HttpStatus.OK);
     }
