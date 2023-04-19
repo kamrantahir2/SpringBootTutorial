@@ -10,6 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DownloadController {
 
+    // This class also needs an instance of PhotozService as shown in PhotozController (The notes can be found in PhotozController)
+    // This PhotozService class will be used to retrieve photos
+    private final PhotozService photozService;
+
+    public DownloadController(PhotozService photozService) {
+        this.photozService = photozService;
+    }
+
+
+
     // Instead of just returning a byte[] array we are returning ResponseEntity<byte[]> which is part of Spring Boot because we have the byte[] array but we also want to send back some HTTP headers including the file name
     @GetMapping("/download/{id}")
     public ResponseEntity<byte[]> download(@PathVariable String id) {

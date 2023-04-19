@@ -2,7 +2,9 @@ package com.example.SpringBootTutorial;
 
 // In this class we will handle methods relating to the web server
 
-import jakarta.validation.Valid;
+// Controllers are used to convert JSON but they don't talk to the database correctly.
+// To solve this issue we will make a Service class (PhotozService)
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,13 +17,30 @@ import java.util.*;
 @RestController
 public class PhotozController {
 
-    // This private List is used to represent a database, THIS WILL BE REPLACED
+    // To use the db that was moved tp PhotozService we make a private final instance of PhotozService
+    private final PhotozService photozService;
+    // Now instead of using db.values() we now call PhotozService.get().
+
+    // Now that we have moved the db this class essentially doesn't know about the db anymore, instead it knows that the PhotozService instance exists. Then when we call PhotozService.get() this class essentially asks PhotozService to send any photos we have. This way it doesn't matter whether the photos come from a database, file system etc. they are all handled the same way by the Service
+
+    // Since we added @Service to the PhotozService class, Spring knows to look for it and that we need to create an instance of it to be used as a service
+
+
+    // After inserting the above code we were then prompted by Intellij to add a constructor
+    public PhotozController(PhotozService photozService) {
+        this.photozService = photozService;
+    }
+
+    // This private List is used to represent a database, THIS WILL BE REPLACED:
+
 //    private List<Photo> db = List.of(new Photo(1, "hello.jpeg"));
 
 //    The above List has been replaced with the below Map
-    private Map<String, Photo> db = new HashMap<>(){{
-        put("1", new Photo("1", "hello.jpeg"));
-}};
+    // We are now removing this mock db and moving it to PhotozService:
+
+//    private Map<String, Photo> db = new HashMap<>(){{
+//        put("1", new Photo("1", "hello.jpeg"));
+//}};
 
     // To start off we will be making a simple class that prints out Hello World on our localhost:8080 server
 
@@ -39,8 +58,11 @@ public class PhotozController {
     // Since Spring knows we are returning a List<photo> it automatically converts the data to JSON for the web server
     @GetMapping("/photoz")
     public Collection<Photo> get() {
-        return db.values();
-        // We need to use db.values to return the full array
+        // We need to use db.values to return the full array:
+//        return db.values();
+
+        // Now that we have moved our db over to PhotozService and created an instance of PhotozService in this class, instead of doing return db.values() as shown above we now do:
+        return PhotozService.get();
     }
 
     // GET A SPECIFIC PHOTO
@@ -49,7 +71,7 @@ public class PhotozController {
     public Photo get(@PathVariable String id) {
         // We have added a parameter of String id which will at as the URL {id} with the marker @PathVariable which tells Spring that the URL {id} will act as the String id
 
-        Photo photo = db.get(id);
+        Photo photo = photozService.get(id);
 
         // We only want to return a photo if it is available. To handle this error Spring has a specific exception called by throw new ResponseStatusException(HttpStatus.NOT_FOUND) where we call ResponseStatusException() and specify the error.
         if (photo == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -61,7 +83,7 @@ public class PhotozController {
     // DeleteMapping()- Used to delete a record
     @DeleteMapping("/photoz/{id}")
     public void delete(@PathVariable String id) {
-        Photo photo = db.remove(id);
+        Photo photo = photozService.remove(id);
         if (photo == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         // USE [REF1] IN THE CHROME CONSOLE WHEN CALLING THIS METHOD
     }
@@ -79,20 +101,25 @@ public class PhotozController {
     @PostMapping("/photoz/")
     public Photo create(@RequestPart("data") MultipartFile file) throws IOException {
 
-        Photo photo = new Photo();
+        // THE COMMENTED OUT CODE BELOW HAS BEEN MOVED TO PhotozService
+
+//        Photo photo = new Photo();
 
         // For this method we want the front end to send some JSON and Spring should convert it to a photo object
         // WE NEED TO SET THE ID SINCE THE FRONT END WON'T DO THAT
-        // The below code generates a random ID as a String .
-        photo.setId(UUID.randomUUID().toString());
+        // The below code generates a random ID as a String:
 
-        // As part of the MultipartFile class we have access to file.getOriginalFilename() when setting the filename for the photo
-        photo.setFilename(file.getOriginalFilename());
+//        photo.setId(UUID.randomUUID().toString());
+
+        // As part of the MultipartFile class we have access to file.getOriginalFilename() when setting the filename for the photo:
+
+//        photo.setFilename(file.getOriginalFilename());
 
         // To set the data (byte[] array in the Photo class) we can simply call the setter for the array and pass through file.getBytes() which is also part of the MultipartFile class:
-        photo.setData(file.getBytes());
 
-        db.put(photo.getId(), photo);
+//        photo.setData(file.getBytes());
+
+        Photo photo = photozService.save(file.getOriginalFilename(), file.getBytes());
         return photo;
     }
 
