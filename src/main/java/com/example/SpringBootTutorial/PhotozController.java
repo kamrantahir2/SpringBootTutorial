@@ -62,7 +62,7 @@ public class PhotozController {
 //        return db.values();
 
         // Now that we have moved our db over to PhotozService and created an instance of PhotozService in this class, instead of doing return db.values() as shown above we now do:
-        return PhotozService.get();
+        return photozService.get();
     }
 
     // GET A SPECIFIC PHOTO

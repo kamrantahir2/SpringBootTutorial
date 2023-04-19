@@ -20,7 +20,7 @@ public class PhotozService {
         put("1", new Photo("1", "hello.jpeg"));
     }};
 
-    public static Collection<Photo> get() {
+    public Collection<Photo> get() {
         return db.values();
     }
 
