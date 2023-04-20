@@ -1,10 +1,12 @@
-package com.example.SpringBootTutorial;
+package com.example.SpringBootTutorial.web;
 
 // In this class we will handle methods relating to the web server
 
 // Controllers are used to convert JSON but they don't talk to the database correctly.
 // To solve this issue we will make a Service class (PhotozService)
 
+import com.example.SpringBootTutorial.model.Photo;
+import com.example.SpringBootTutorial.service.PhotozService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -119,7 +121,7 @@ public class PhotozController {
 
 //        photo.setData(file.getBytes());
 
-        Photo photo = photozService.save(file.getOriginalFilename(), file.getBytes());
+        Photo photo = photozService.save(file.getOriginalFilename(), file.getContentType(), file.getBytes());
         return photo;
     }
 

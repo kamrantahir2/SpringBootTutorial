@@ -1,5 +1,7 @@
-package com.example.SpringBootTutorial;
+package com.example.SpringBootTutorial.web;
 
+import com.example.SpringBootTutorial.model.Photo;
+import com.example.SpringBootTutorial.service.PhotozService;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +49,8 @@ public class DownloadController {
                 .builder("attachment")
                 .filename(photo.getFilename())
                 .build();
+
+        // Now that we have built the header by setting the content type and building the ContentDisposition then setting it to the header.
         headers.setContentDisposition(build);
 
         return new ResponseEntity<>(data, headers, HttpStatus.OK);

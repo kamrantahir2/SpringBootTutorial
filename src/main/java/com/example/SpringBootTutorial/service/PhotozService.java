@@ -1,7 +1,8 @@
-package com.example.SpringBootTutorial;
+package com.example.SpringBootTutorial.service;
 
 // The Controller classes handle JSON well but have issues interacting with databases, instead of using a controller we made this PhotozService class to handle talking with databases
 
+import com.example.SpringBootTutorial.model.Photo;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -33,8 +34,9 @@ public class PhotozService {
     }
 
     // These parameters are inserted in PhotozController where we can make use of file.getOriginalFilename() and file.getBytes() as part of the MultipartFile class that we use in PhotozController
-    public Photo save(String filename, byte[] data) {
+    public Photo save(String filename, String contentType, byte[] data) {
         Photo photo = new Photo();
+        photo.setContentType(contentType);
         photo.setId(UUID.randomUUID().toString());
         photo.setFilename(filename);
         photo.setData(data);

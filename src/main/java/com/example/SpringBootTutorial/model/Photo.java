@@ -1,4 +1,4 @@
-package com.example.SpringBootTutorial;
+package com.example.SpringBootTutorial.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
@@ -10,8 +10,7 @@ public class Photo {
     @NotEmpty
     private String filename;
 
-    // Used to set headers in DownloadController
-
+    // Used to set headers in DownloadController, We will be initializing by adding it to the constructor and then we set it in PhotozService.save()
     private String contentType;
 
     // When we get the JSON on the web server it includes the metadata (bytes[] array) which is huge and clogs up the screen. To avoid this we simply add the annotation @JsonIgnore
