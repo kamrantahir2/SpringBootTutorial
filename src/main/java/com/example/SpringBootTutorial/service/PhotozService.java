@@ -32,6 +32,7 @@ public class PhotozService {
         return db.get(id);
     }
 
+
     public Photo remove(String id) {
         return db.remove(id);
     }
