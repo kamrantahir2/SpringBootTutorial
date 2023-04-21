@@ -21,6 +21,9 @@ public class PhotozService {
         put("1", new Photo("1", "hello.jpeg"));
     }};
 
+    // The below 2 methods are an example of method overloading. Note how we use the same name for both
+    // methods but calling it without any parameters returns the whole list but calling it with an ID
+    // returns the specific Photo (Null is returned if it does not exist)
     public Collection<Photo> get() {
         return db.values();
     }
