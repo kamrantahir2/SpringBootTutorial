@@ -7,13 +7,13 @@ package com.example.SpringBootTutorial.web;
 
 import com.example.SpringBootTutorial.model.Photo;
 import com.example.SpringBootTutorial.service.PhotozService;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.util.*;
 
 // We added @RestController. This will add an instance of a RestController for this class
 @RestController
@@ -59,7 +59,7 @@ public class PhotozController {
     // RETURN A LIST OF PHOTOS AND THEIR DATA
     // Since Spring knows we are returning a List<photo> it automatically converts the data to JSON for the web server
     @GetMapping("/photoz")
-    public Collection<Photo> get() {
+    public Iterable<Photo> get() {
         // We need to use db.values to return the full array:
 //        return db.values();
 
@@ -70,7 +70,7 @@ public class PhotozController {
     // GET A SPECIFIC PHOTO
     // We have added an {id} parameter to the URL to get a specific photo
     @GetMapping("/photoz/{id}")
-    public Photo get(@PathVariable String id) {
+    public Photo get(@PathVariable Integer id) {
         // We have added a parameter of String id which will at as the URL {id} with the marker @PathVariable which tells Spring that the URL {id} will act as the String id
 
         Photo photo = photozService.get(id);
@@ -84,10 +84,8 @@ public class PhotozController {
 
     // DeleteMapping()- Used to delete a record
     @DeleteMapping("/photoz/{id}")
-    public void delete(@PathVariable String id) {
-        Photo photo = photozService.remove(id);
-        if (photo == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        // USE [REF1] IN THE CHROME CONSOLE WHEN CALLING THIS METHOD
+    public void delete(@PathVariable Integer id) {
+        photozService.remove(id);
     }
 
     // PostMapping() used to upload photos

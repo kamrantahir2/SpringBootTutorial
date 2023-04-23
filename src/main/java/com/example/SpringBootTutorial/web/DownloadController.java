@@ -23,7 +23,7 @@ public class DownloadController {
 
     // Instead of just returning a byte[] array we are returning ResponseEntity<byte[]> which is part of Spring Boot because we have the byte[] array but we also want to send back some HTTP headers including the file name
     @GetMapping("/download/{id}")
-    public ResponseEntity<byte[]> download(@PathVariable String id) {
+    public ResponseEntity<byte[]> download(@PathVariable Integer id) {
 
         // We search for the photo using photozService.get(id) and check to see if it is null, if so (meaning the photo doesn't exist) then we throw an error
         Photo photo = photozService.get(id);

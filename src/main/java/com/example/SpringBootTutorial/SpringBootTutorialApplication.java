@@ -13,6 +13,13 @@ package com.example.SpringBootTutorial;
 	// - Image Data
 
 
+	// - We need to create a "repository" to use Spring Data, to do that we create a class called repository.PhotozRepository which will automatically create a package called repository if it does not already exist.
+
+	// - The PhotozRepository will actually be an interface and will extend CrudRepository
+
+// DEPLOYMENT:
+	// - To deploy our app we click on the maven tab on the right, click on our project -> lifecycle -> double click package
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
